@@ -51,9 +51,9 @@ public final class ASBlocks {
             () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLUE).strength(5.0F, 8.0F)));
 
     public static final DeferredBlock<Block> ALTAR_DISCOVERY = BLOCKS.register("altar_discovery",
-            () -> new DiscoveryAltarBlock(stoneProps().strength(3.0F, 9.0F).lightLevel(state -> 4)));
+            () -> new DiscoveryAltarBlock(stoneProps().strength(3.0F, 9.0F).lightLevel(state -> 4).noOcclusion()));
     public static final DeferredBlock<Block> WELL = BLOCKS.register("well",
-            () -> new Block(stoneProps().strength(3.0F, 9.0F)));
+            () -> new Block(stoneProps().strength(3.0F, 9.0F).noOcclusion()));
 
     public static final DeferredBlock<LiquidBlock> LIQUID_STARLIGHT = BLOCKS.register("liquid_starlight",
             () -> new LiquidBlock(ASFluids.LIQUID_STARLIGHT.get(), BlockBehaviour.Properties.of()
