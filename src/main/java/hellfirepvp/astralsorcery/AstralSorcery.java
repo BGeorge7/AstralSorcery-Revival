@@ -1,6 +1,8 @@
 package hellfirepvp.astralsorcery;
 
 import com.mojang.logging.LogUtils;
+import hellfirepvp.astralsorcery.common.registry.ASRegistries;
+import hellfirepvp.astralsorcery.common.util.tick.ASTickBus;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -17,9 +19,12 @@ public class AstralSorcery {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AstralSorcery(IEventBus modEventBus) {
+        ASRegistries.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
 
+        ASTickBus.register(NeoForge.EVENT_BUS);
         NeoForge.EVENT_BUS.register(this);
     }
 

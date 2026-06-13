@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "astralsorcery:aquamarine"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    " G ",
+    "GAG",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "astralsorcery:glass_lens"
+  }
+}
