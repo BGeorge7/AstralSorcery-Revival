@@ -1,14 +1,15 @@
-# Astral Sorcery Revival - 1.21.1 Workspace
+# Astral Sorcery Revival - NeoForge 1.21.1 Workspace
 
-This workspace is a clean Forge 1.21.1 scaffold for porting Astral Sorcery.
+This workspace is a clean NeoForge 1.21.1 scaffold for porting Astral Sorcery.
 
 ## Current Baseline
 
 - Minecraft: 1.21.1
-- Forge: 52.1.14
+- NeoForge: 21.1.233
 - Java target: 21
 - Mod id: `astralsorcery`
 - Main class: `hellfirepvp.astralsorcery.AstralSorcery`
+- Curios NeoForge: `9.5.1+1.21.1` as an optional development/runtime dependency
 
 The original 1.16.5-era fork source is kept in `legacy-1.16.5` for migration reference. Do not wire that whole source tree into the build at once; port features incrementally into `src/main`.
 
@@ -19,14 +20,7 @@ The original 1.16.5-era fork source is kept in `legacy-1.16.5` for migration ref
 .\gradlew.bat build
 .\gradlew.bat runClient
 .\gradlew.bat runServer
+.\gradlew.bat runData
 ```
 
-Forge 1.21.1 requires Java 21. If `java -version` shows Java 8, install a JDK 21 distribution and set `JAVA_HOME` before running Gradle.
-
-This workspace also includes a local helper that points Gradle at the portable JDK 21 downloaded under `..\work\jdk21`:
-
-```powershell
-.\dev-gradle.ps1 tasks
-.\dev-gradle.ps1 build
-.\run-client.ps1
-```
+NeoForge 1.21.1 requires Java 21. `JAVA_HOME` should point at a JDK 21 install.
