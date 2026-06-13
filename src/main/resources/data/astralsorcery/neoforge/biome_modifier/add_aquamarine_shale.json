@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#astralsorcery:has_aquamarine_shale",
+  "features": "astralsorcery:aquamarine_shale",
+  "step": "underground_ores"
+}

@@ -1,0 +1,8 @@
+{
+  "values": [
+    "#c:is_beach",
+    "#c:is_river",
+    "#c:is_ocean",
+    "#c:is_sandy"
+  ]
+}
