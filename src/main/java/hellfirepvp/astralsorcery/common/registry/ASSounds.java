@@ -14,7 +14,6 @@ public final class ASSounds {
 
     public static final DeferredHolder<SoundEvent, SoundEvent> CRAFT_START = sound("altar_craft_start");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRAFT_FINISH = sound("altar_craft_finish");
-    public static final DeferredHolder<SoundEvent, SoundEvent> LIQUID_STARLIGHT_IDLE = sound("liquid_starlight_idle");
 
     private ASSounds() {
     }

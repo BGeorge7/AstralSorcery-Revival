@@ -1,6 +1,7 @@
 package hellfirepvp.astralsorcery.common.registry;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.block.DiscoveryAltarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -50,7 +51,7 @@ public final class ASBlocks {
             () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLUE).strength(5.0F, 8.0F)));
 
     public static final DeferredBlock<Block> ALTAR_DISCOVERY = BLOCKS.register("altar_discovery",
-            () -> new Block(stoneProps().strength(3.0F, 9.0F).lightLevel(state -> 4)));
+            () -> new DiscoveryAltarBlock(stoneProps().strength(3.0F, 9.0F).lightLevel(state -> 4)));
     public static final DeferredBlock<Block> WELL = BLOCKS.register("well",
             () -> new Block(stoneProps().strength(3.0F, 9.0F)));
 

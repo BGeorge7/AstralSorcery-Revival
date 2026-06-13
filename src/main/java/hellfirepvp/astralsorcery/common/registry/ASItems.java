@@ -1,6 +1,7 @@
 package hellfirepvp.astralsorcery.common.registry;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.item.ResonatingWandItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -48,7 +49,8 @@ public final class ASItems {
     public static final DeferredItem<Item> ROCK_CRYSTAL = simple("rock_crystal", new Item.Properties().stacksTo(16));
     public static final DeferredItem<Item> PARCHMENT = simple("parchment");
     public static final DeferredItem<Item> CONSTELLATION_PAPER = simple("constellation_paper", new Item.Properties().stacksTo(1));
-    public static final DeferredItem<Item> WAND = simple("wand", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<ResonatingWandItem> WAND = ITEMS.register("wand",
+            () -> new ResonatingWandItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> GLASS_LENS = simple("glass_lens");
     public static final DeferredItem<Item> STARDUST = simple("stardust");
     public static final DeferredItem<Item> STARMETAL_INGOT = simple("starmetal_ingot");
