@@ -1,37 +1,42 @@
-modLoader="javafml" #mandatory
-loaderVersion="[35,)"
-license="All rights reserved"
-issueTrackerURL="https://github.com/HellFirePvP/AstralSorcery/issues" #optional
+# See https://docs.minecraftforge.net/en/1.21.x/gettingstarted/modfiles/#modstoml
+# There are lots of things you can do with the mods.toml, and not all fields are included with this MDK
+# References: https://github.com/MinecraftForge/MDKExamples
+
+modLoader="javafml"
+loaderVersion="[0,)"
+license="All Rights Reserved"
+issueTrackerURL="https://github.com/BGeorge7/AstralSorcery-Revival/issues"
+#clientSideOnly=true #optional, default=false
+
 [[mods]]
 modId="astralsorcery"
 version="${file.jarVersion}"
-displayName="Astral Sorcery"
-displayURL="https://minecraft.curseforge.com/projects/astral-sorcery"
-logoFile="logo.png"
-credits="HellFirePvP (code), wiiv (models & textures), VulpTheHorseDog (models & textures)"
-authors="HellFirePvP, wiiv, VulpTheHorseDog"
-description='''Magic mod that draws power from stars and their constellations'''
+displayName="Astral Sorcery Revival"
+#updateJSONURL="https://example.com/updates.json" #optional
+displayURL="https://github.com/BGeorge7/AstralSorcery-Revival"
+#logoFile="examplemod.png" #optional
+#credits="" #optional
+authors="HellFirePvP, BGeorge7, Astral Sorcery Revival contributors"
+#displayTest="MATCH_VERSION" #optional, default=MATCH_VERSION when not clientSideOnly, else IGNORE_ALL_VERSION
+
+# Access Transformers
+# Optional, if not specified Forge will attempt to find the default META-INF/accesstransformer.cfg and silently continue if not found. May default to an empty list in a future MC.
+# If you specify AT path strings in this list, Forge will attempt to load each of them and throw errors for any that aren't found.
+# Specifying an empty list when your mod has no ATs is recommended to opt-out of the default for slightly better loading performance.
+#accessTransformers = []
+
+description='''A revival porting the Astral Sorcery magic mod to modern Minecraft and Forge.'''
+
 [[dependencies.astralsorcery]]
     modId="forge"
     mandatory=true
-    versionRange="[35,)"
+    versionRange="[52,)"
     ordering="NONE"
     side="BOTH"
+
 [[dependencies.astralsorcery]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4]"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.astralsorcery]]
-    modId="observerlib"
-    mandatory=true
-    versionRange="[1.16.4-1.5,]"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.astralsorcery]]
-    modId="curios"
-    mandatory=true
-    versionRange="[FORGE-1.16.3-,)"
+    versionRange="[1.21.1,1.22,)"
     ordering="NONE"
     side="BOTH"

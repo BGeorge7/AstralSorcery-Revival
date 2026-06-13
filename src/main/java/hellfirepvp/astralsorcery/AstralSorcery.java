@@ -1,70 +1,40 @@
-/*******************************************************************************
- * HellFirePvP / Astral Sorcery 2022
- *
- * All rights reserved.
- * The source code is available on github: https://github.com/HellFirePvP/AstralSorcery
- * For further details, see the License file there.
- ******************************************************************************/
-
 package hellfirepvp.astralsorcery;
 
-import hellfirepvp.astralsorcery.client.ClientProxy;
-import hellfirepvp.astralsorcery.common.CommonProxy;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.*;
+import com.mojang.logging.LogUtils;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.common.MinecraftForge;
+import org.slf4j.Logger;
 
-/**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on github.
- * Class: AstralSorcery
- * Created by HellFirePvP
- * Date: 19.04.2019 / 18:14
- */
 @Mod(AstralSorcery.MODID)
 public class AstralSorcery {
-
     public static final String MODID = "astralsorcery";
-    public static final String NAME = "Astral Sorcery";
 
-    public static Logger log = LogManager.getLogger(NAME);
+    private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static AstralSorcery instance;
-    private static ModContainer modContainer;
-    private final CommonProxy proxy;
+    public AstralSorcery(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::clientSetup);
 
-    public AstralSorcery() {
-        instance = this;
-        modContainer = ModList.get().getModContainerById(MODID).get();
-
-
-        this.proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-        this.proxy.initialize();
-        this.proxy.attachLifecycle(FMLJavaModLoadingContext.get().getModEventBus());
-        this.proxy.attachEventHandlers(MinecraftForge.EVENT_BUS);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static AstralSorcery getInstance() {
-        return instance;
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        LOGGER.info("Astral Sorcery Revival common setup loaded.");
     }
 
-    public static ModContainer getModContainer() {
-        return modContainer;
+    private void clientSetup(final FMLClientSetupEvent event) {
+        LOGGER.info("Astral Sorcery Revival client setup loaded.");
     }
 
-    public static CommonProxy getProxy() {
-        return getInstance().proxy;
-    }
-
-    public static ResourceLocation key(String path) {
-        return new ResourceLocation(AstralSorcery.MODID, path);
-    }
-
-    public static boolean isDoingDataGeneration() {
-        return DatagenModLoader.isRunningDataGen();
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {
+        LOGGER.info("Astral Sorcery Revival server starting.");
     }
 }

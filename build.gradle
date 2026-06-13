@@ -1,251 +1,62 @@
-import net.minecraftforge.gradle.common.task.SignJar
+// This is a minimal setup of a Forge mod workspace.
+// For complex examples (including AccessTransformers, Jar-in-Jar, and Mixin), see our examples repository.
+// https://github.com/MinecraftForge/MDKExamples
 
-buildscript {
-
-    repositories {
-        maven {
-            url = 'https://files.minecraftforge.net/maven'
-        }
-        maven {
-            url "https://repo.spongepowered.org/repository/maven-public/"
-            content { includeGroup "org.spongepowered" }
-        }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, "astralsorcery.refmap.json"
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+    id 'net.minecraftforge.gradle' version '[7.0.3,8)'
 }
 
-version = '1.16.4-1.14.1'
+version = '1.21.1-0.1.0-dev'
 group = 'hellfirepvp.astralsorcery'
-archivesBaseName = 'astralsorcery'
-String build_version = ""
 
-// Most likely inside Jenkins. Or homebrew environment.
-// I hope you know what you do if it's the latter.
-if (System.getenv("BUILD_NUMBER") != null) {
-    build_version = version + ".v" + System.getenv("BUILD_NUMBER")
-}
+// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+// Include generated resources
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 minecraft {
+    mappings channel: 'official', version: '1.21.1'
 
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
     runs {
-        client {
-            workingDirectory project.file('run')
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'info'
-
-            mods {
-                astralsorcery {
-                    source sourceSets.main
-                }
-            }
+            systemProperty 'forge.enabledGameTestNamespaces', 'astralsorcery'
         }
 
-        server {
-            workingDirectory project.file('run')
+        register('client')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'info'
-            mods {
-                astralsorcery {
-                    source sourceSets.main
-                }
-            }
+        register('server') {
+            args '--nogui'
         }
 
-        data {
-            workingDirectory project.file('run')
+        register('gameTestServer')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'info'
+        register('data') {
+            workingDir = layout.projectDirectory.dir('run-data')
 
-            args '--mod', 'astralsorcery', '--all', '--output', file('src/generated/resources/'), '--validate',
-            '--existing', sourceSets.main.resources.srcDirs[0]
-
-            mods {
-                astralsorcery {
-                    source sourceSets.main
-                }
-            }
+            args '--mod', 'astralsorcery', '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
         }
     }
 }
 
 repositories {
-
-    maven {
-        name 'hellfirepvp maven'
-        url 'https://maven.hellfiredev.net/'
-    }
-
-    maven {
-        name 'curios maven'
-        url "https://maven.theillusivec4.top/"
-    }
-
-    maven {
-        name 'JEI maven'
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    
-    maven {
-        name 'Botania maven'
-        url "https://maven.blamejared.com"
-    }
-
-    maven {
-        name 'CF maven dankstorage'
-        url "https://www.cursemaven.com"
-    }
-
+    minecraft.mavenizer(it) // In Kotlin, it = this
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
 }
 
 dependencies {
-
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.22'
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
-    compileOnly 'hellfirepvp.observerlib:observerlib:1.16.5-1.5.2.v77'
-    runtimeOnly 'hellfirepvp.observerlib:observerlib:1.16.5-1.5.2.v77:deobf'
-
-    compileOnly 'top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.1:api'
-    runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.1')
-
-    compileOnly fg.deobf('mezz.jei:jei-1.16.5:7.7.0.99')
-    runtimeOnly fg.deobf('mezz.jei:jei-1.16.5:7.7.0.99')
-
-    compileOnly fg.deobf('vazkii.patchouli:Patchouli:1.16.4-51:api')
-    runtimeOnly fg.deobf('vazkii.patchouli:Patchouli:1.16.4-51')
-    
-    compileOnly fg.deobf('vazkii.botania:Botania:1.16.5-416:api')
-    runtimeOnly fg.deobf('vazkii.botania:Botania:1.16.5-416')
-    
-    compileOnly fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.294')
-    runtimeOnly fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.294')
-
-    compileOnly fg.deobf("curse.maven:corail-tombstone-243707:3800673")
-    runtimeOnly fg.deobf("curse.maven:corail-tombstone-243707:3800673")
+    implementation minecraft.dependency('net.minecraftforge:forge:1.21.1-52.1.14')
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-java {
-    withSourcesJar()
-}
-
-//Sign jar from flatfile if present
-task signJar(type: SignJar, dependsOn: jar) {
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-    if (project.hasProperty('keyStore')) {
-        keyStore = project.keyStore
-        alias = project.alias
-        storePass = project.storePass
-        keyPass = project.keyPass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    } else {
-        logger.warn("No key store found, not signing the output jar\n")
-    }
-}
-
-build.dependsOn signJar
-
-// Example for how to get properties into the manifest for reading by the runtime..
-jar {
-    manifest {
-        attributes([
-            "Specification-Title": "astralsorcery",
-            "Specification-Vendor": "hellfirepvp",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" : "hellfirepvp",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConnector": "hellfirepvp.astralsorcery.MixinConnector"
-        ])
-    }
-}
-
-task srcJar(type: Jar) {
-    from(sourceSets.main.java)
-    classifier = 'sources'
-}
-
-artifacts {
-    archives srcJar
-}
-
-publishing {
-    tasks.publish.dependsOn build
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version build_version
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url "file://" + System.getenv("LOCAL_MAVEN")
-        }
-    }
-}
-
-tasks.withType(GenerateModuleMetadata) {
-    enabled = false
-}
-
-// Minimize/optimize all png files, requires optipng on the PATH
-// Credits: ImmersiveEngineering / and from there: BrainStone
-void minimizePNGFile(File file) {
-    long size = file.length()
-    exec {
-        executable "optipng"
-        args "-q", "-o7", "-zm1-9", "-strip", "all", file
-    }
-    long newSize = file.length()
-    if (newSize < size) {
-        System.out.format("Reduced File size of %s from %d bytes to %d bytes (reduced by %.2f%%)\n",
-                file, size, newSize, ((double) (size - newSize)) / ((double) size) * 100.0)
-    } else {
-        System.out.format("File size of %s couldn't be reduced.\n", file)
-    }
-}
-
-task optimizePng {
-    def pngPatterns = ["**/*.png"]
-    doLast {
-        //Ensure the logo is minimized (we add this file to each jar)
-        //Minimize any PNGs in the source sets
-        for (dir in sourceSets.main.resources.srcDirs) {
-            fileTree(dir: dir, includes: pngPatterns).each { minimizePNGFile(it) }
-        }
-    }
+tasks.withType(JavaCompile).configureEach {
+    // Use the UTF-8 charset for Java compilation
+    // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
+    options.encoding = 'UTF-8'
 }
