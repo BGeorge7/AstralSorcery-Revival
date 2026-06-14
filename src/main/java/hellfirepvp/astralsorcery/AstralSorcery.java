@@ -1,6 +1,7 @@
 package hellfirepvp.astralsorcery;
 
 import com.mojang.logging.LogUtils;
+import hellfirepvp.astralsorcery.common.command.ASDebugCommands;
 import hellfirepvp.astralsorcery.common.registry.ASRegistries;
 import hellfirepvp.astralsorcery.common.util.tick.ASTickBus;
 import net.neoforged.bus.api.IEventBus;
@@ -25,6 +26,7 @@ public class AstralSorcery {
         modEventBus.addListener(this::clientSetup);
 
         ASTickBus.register(NeoForge.EVENT_BUS);
+        NeoForge.EVENT_BUS.addListener(ASDebugCommands::register);
         NeoForge.EVENT_BUS.register(this);
     }
 
