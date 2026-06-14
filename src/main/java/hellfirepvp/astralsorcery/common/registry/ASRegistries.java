@@ -16,6 +16,8 @@ public final class ASRegistries {
         ASMenuTypes.register(modEventBus);
         ASRecipeSerializers.register(modEventBus);
         ASRecipeTypes.register(modEventBus);
+        ASFeatures.register(modEventBus);
+        ASStructureRegistries.register(modEventBus);
         ASCreativeTabs.register(modEventBus);
     }
 }

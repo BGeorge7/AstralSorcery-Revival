@@ -40,8 +40,10 @@ public final class ASItems {
 
     public static final DeferredItem<BlockItem> AQUAMARINE_SAND_ORE = blockItem("aquamarine_sand_ore", ASBlocks.AQUAMARINE_SAND_ORE);
     public static final DeferredItem<BlockItem> ROCK_CRYSTAL_ORE = blockItem("rock_crystal_ore", ASBlocks.ROCK_CRYSTAL_ORE);
+    public static final DeferredItem<BlockItem> DEEPSLATE_ROCK_CRYSTAL_ORE = blockItem("deepslate_rock_crystal_ore", ASBlocks.DEEPSLATE_ROCK_CRYSTAL_ORE);
     public static final DeferredItem<BlockItem> STARMETAL = blockItem("starmetal", ASBlocks.STARMETAL);
     public static final DeferredItem<BlockItem> STARMETAL_ORE = blockItem("starmetal_ore", ASBlocks.STARMETAL_ORE);
+    public static final DeferredItem<BlockItem> ROCK_COLLECTOR_CRYSTAL = blockItem("rock_collector_crystal", ASBlocks.ROCK_COLLECTOR_CRYSTAL);
     public static final DeferredItem<BlockItem> ALTAR_DISCOVERY = blockItem("altar_discovery", ASBlocks.ALTAR_DISCOVERY);
     public static final DeferredItem<BlockItem> WELL = blockItem("well", ASBlocks.WELL);
 
@@ -62,8 +64,9 @@ public final class ASItems {
             MARBLE_RAW, MARBLE_BRICKS, MARBLE_ARCH, MARBLE_CHISELED, MARBLE_ENGRAVED, MARBLE_PILLAR, MARBLE_RUNED,
             MARBLE_SLAB, MARBLE_STAIRS, BLACK_MARBLE_RAW, BLACK_MARBLE_BRICKS, BLACK_MARBLE_ARCH,
             BLACK_MARBLE_CHISELED, BLACK_MARBLE_ENGRAVED, BLACK_MARBLE_PILLAR, BLACK_MARBLE_RUNED,
-            BLACK_MARBLE_SLAB, BLACK_MARBLE_STAIRS, AQUAMARINE_SAND_ORE, ROCK_CRYSTAL_ORE, STARMETAL,
-            STARMETAL_ORE, ALTAR_DISCOVERY, WELL, AQUAMARINE, ROCK_CRYSTAL, PARCHMENT, CONSTELLATION_PAPER,
+            BLACK_MARBLE_SLAB, BLACK_MARBLE_STAIRS, AQUAMARINE_SAND_ORE, ROCK_CRYSTAL_ORE,
+            DEEPSLATE_ROCK_CRYSTAL_ORE, STARMETAL, STARMETAL_ORE, ROCK_COLLECTOR_CRYSTAL, ALTAR_DISCOVERY,
+            WELL, AQUAMARINE, ROCK_CRYSTAL, PARCHMENT, CONSTELLATION_PAPER,
             WAND, GLASS_LENS, STARDUST, STARMETAL_INGOT, TOME, BUCKET_LIQUID_STARLIGHT);
 
     private ASItems() {

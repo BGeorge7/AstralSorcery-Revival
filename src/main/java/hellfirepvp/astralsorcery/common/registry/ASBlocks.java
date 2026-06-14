@@ -1,6 +1,7 @@
 package hellfirepvp.astralsorcery.common.registry;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.block.CollectorCrystalBlock;
 import hellfirepvp.astralsorcery.common.block.DiscoveryAltarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -23,7 +24,7 @@ public final class ASBlocks {
     public static final DeferredBlock<Block> MARBLE_ARCH = stone("marble_arch");
     public static final DeferredBlock<Block> MARBLE_CHISELED = stone("marble_chiseled");
     public static final DeferredBlock<Block> MARBLE_ENGRAVED = stone("marble_engraved");
-    public static final DeferredBlock<Block> MARBLE_PILLAR = stone("marble_pillar");
+    public static final DeferredBlock<Block> MARBLE_PILLAR = pillarStone("marble_pillar");
     public static final DeferredBlock<Block> MARBLE_RUNED = stone("marble_runed");
     public static final DeferredBlock<SlabBlock> MARBLE_SLAB = slab("marble_slab");
     public static final DeferredBlock<StairBlock> MARBLE_STAIRS = stairs("marble_stairs", MARBLE_BRICKS);
@@ -33,7 +34,7 @@ public final class ASBlocks {
     public static final DeferredBlock<Block> BLACK_MARBLE_ARCH = darkStone("black_marble_arch");
     public static final DeferredBlock<Block> BLACK_MARBLE_CHISELED = darkStone("black_marble_chiseled");
     public static final DeferredBlock<Block> BLACK_MARBLE_ENGRAVED = darkStone("black_marble_engraved");
-    public static final DeferredBlock<Block> BLACK_MARBLE_PILLAR = darkStone("black_marble_pillar");
+    public static final DeferredBlock<Block> BLACK_MARBLE_PILLAR = darkPillarStone("black_marble_pillar");
     public static final DeferredBlock<Block> BLACK_MARBLE_RUNED = darkStone("black_marble_runed");
     public static final DeferredBlock<SlabBlock> BLACK_MARBLE_SLAB = darkSlab("black_marble_slab");
     public static final DeferredBlock<StairBlock> BLACK_MARBLE_STAIRS = stairs("black_marble_stairs", BLACK_MARBLE_BRICKS);
@@ -45,10 +46,20 @@ public final class ASBlocks {
                     .sound(SoundType.SAND)));
     public static final DeferredBlock<Block> ROCK_CRYSTAL_ORE = BLOCKS.register("rock_crystal_ore",
             () -> new Block(stoneProps().strength(4.0F, 6.0F)));
+    public static final DeferredBlock<Block> DEEPSLATE_ROCK_CRYSTAL_ORE = BLOCKS.register("deepslate_rock_crystal_ore",
+            () -> new Block(stoneProps().mapColor(MapColor.DEEPSLATE).strength(5.5F, 6.0F).sound(SoundType.DEEPSLATE)));
     public static final DeferredBlock<Block> STARMETAL = BLOCKS.register("starmetal",
             () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLUE).strength(5.0F, 8.0F)));
     public static final DeferredBlock<Block> STARMETAL_ORE = BLOCKS.register("starmetal_ore",
             () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLUE).strength(5.0F, 8.0F)));
+    public static final DeferredBlock<CollectorCrystalBlock> ROCK_COLLECTOR_CRYSTAL = BLOCKS.register("rock_collector_crystal",
+            () -> new CollectorCrystalBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .requiresCorrectToolForDrops()
+                    .strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.GLASS)
+                    .lightLevel(state -> 11)
+                    .noOcclusion()));
 
     public static final DeferredBlock<Block> ALTAR_DISCOVERY = BLOCKS.register("altar_discovery",
             () -> new DiscoveryAltarBlock(stoneProps().strength(3.0F, 9.0F).lightLevel(state -> 4).noOcclusion()));
@@ -77,6 +88,14 @@ public final class ASBlocks {
 
     private static DeferredBlock<Block> darkStone(String name) {
         return BLOCKS.register(name, () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLACK)));
+    }
+
+    private static DeferredBlock<Block> pillarStone(String name) {
+        return BLOCKS.register(name, () -> new Block(stoneProps().noOcclusion()));
+    }
+
+    private static DeferredBlock<Block> darkPillarStone(String name) {
+        return BLOCKS.register(name, () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLACK).noOcclusion()));
     }
 
     private static DeferredBlock<SlabBlock> slab(String name) {

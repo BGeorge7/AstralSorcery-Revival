@@ -2,8 +2,8 @@
   "feature": "astralsorcery:rock_crystal",
   "placement": [
     {
-      "type": "minecraft:rarity_filter",
-      "chance": 25
+      "type": "minecraft:count",
+      "count": 2
     },
     {
       "type": "minecraft:in_square"
