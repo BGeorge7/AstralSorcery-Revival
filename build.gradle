@@ -135,9 +135,9 @@ tasks.withType(JavaCompile).configureEach {
 
 def devClientOptionsFile = layout.projectDirectory.file('run/options.txt')
 
-tasks.register('muteDevClientAudio') {
+tasks.register('configureDevClientAudio') {
     group = 'minecraft runs'
-    description = 'Forces the local dev client options.txt master volume to 0 before launch.'
+    description = 'Forces the local dev client music volume to 0 while leaving master audio enabled.'
     outputs.file(devClientOptionsFile)
 
     doLast {
@@ -146,16 +146,24 @@ tasks.register('muteDevClientAudio') {
 
         def lines = optionsFile.exists() ? optionsFile.readLines('UTF-8') : []
         def wroteMaster = false
+        def wroteMusic = false
         lines = lines.collect { line ->
             if (line.startsWith('soundCategory_master:')) {
                 wroteMaster = true
-                return 'soundCategory_master:0.0'
+                return 'soundCategory_master:1.0'
+            }
+            if (line.startsWith('soundCategory_music:')) {
+                wroteMusic = true
+                return 'soundCategory_music:0.0'
             }
             return line
         }
 
         if (!wroteMaster) {
-            lines.add('soundCategory_master:0.0')
+            lines.add('soundCategory_master:1.0')
+        }
+        if (!wroteMusic) {
+            lines.add('soundCategory_music:0.0')
         }
 
         optionsFile.write(lines.join(System.lineSeparator()) + System.lineSeparator(), 'UTF-8')
@@ -163,7 +171,7 @@ tasks.register('muteDevClientAudio') {
 }
 
 tasks.matching { it.name == 'runClient' }.configureEach {
-    dependsOn tasks.named('muteDevClientAudio')
+    dependsOn tasks.named('configureDevClientAudio')
 }
 
 idea {

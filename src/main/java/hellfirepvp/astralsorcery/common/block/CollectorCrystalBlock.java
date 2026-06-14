@@ -61,7 +61,9 @@ public class CollectorCrystalBlock extends BaseEntityBlock {
             player.displayClientMessage(Component.translatable(
                     "astralsorcery.misc.collector.status",
                     crystal.getConstellationDisplayName(),
-                    percent), true);
+                    percent,
+                    crystal.doesSeeSky() ? Component.translatable("astralsorcery.misc.collector.sky_open") : Component.translatable("astralsorcery.misc.collector.sky_blocked"),
+                    crystal.getAttributeSummary()), true);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }

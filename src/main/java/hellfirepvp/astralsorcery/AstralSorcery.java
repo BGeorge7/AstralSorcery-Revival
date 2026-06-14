@@ -1,6 +1,7 @@
 package hellfirepvp.astralsorcery;
 
 import com.mojang.logging.LogUtils;
+import hellfirepvp.astralsorcery.client.ASClientSetup;
 import hellfirepvp.astralsorcery.common.command.ASDebugCommands;
 import hellfirepvp.astralsorcery.common.registry.ASRegistries;
 import hellfirepvp.astralsorcery.common.util.tick.ASTickBus;
@@ -24,6 +25,8 @@ public class AstralSorcery {
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(ASClientSetup::registerParticles);
+        modEventBus.addListener(ASClientSetup::registerRenderers);
 
         ASTickBus.register(NeoForge.EVENT_BUS);
         NeoForge.EVENT_BUS.addListener(ASDebugCommands::register);
@@ -35,6 +38,7 @@ public class AstralSorcery {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
+        ASClientSetup.setup(event);
         LOGGER.info("Astral Sorcery Revival client setup loaded.");
     }
 

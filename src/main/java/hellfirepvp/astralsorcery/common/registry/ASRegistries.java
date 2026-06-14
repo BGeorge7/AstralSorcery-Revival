@@ -11,6 +11,7 @@ public final class ASRegistries {
         ASItems.register(modEventBus);
         ASFluids.register(modEventBus);
         ASSounds.register(modEventBus);
+        ASParticles.register(modEventBus);
         ASDataComponents.register(modEventBus);
         ASBlockEntityTypes.register(modEventBus);
         ASMenuTypes.register(modEventBus);

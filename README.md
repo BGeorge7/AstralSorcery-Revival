@@ -24,3 +24,9 @@ The original 1.16.5-era fork source is kept in `legacy-1.16.5` for migration ref
 ```
 
 NeoForge 1.21.1 requires Java 21. `JAVA_HOME` should point at a JDK 21 install.
+
+## Porting Notes
+
+- `docs/ai-porting-notes.md` tracks workflow decisions, migration findings, and handoff notes for future AI sessions.
+- `docs/current-game-mechanics.md` tracks what currently works in-game versus what is still placeholder or not implemented.
+- `docs/dependency-strategy.md` tracks dependency decisions around ObserverLib, Curios, and related integrations.
