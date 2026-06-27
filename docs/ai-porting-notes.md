@@ -18,6 +18,8 @@ The port should be faithful to old Astral Sorcery from the player perspective, b
 - The user may keep an old Minecraft instance open with the original mod installed as a behavior reference.
 - Do not mass-kill `java`, `javaw`, or all Minecraft processes.
 - If the NeoForge dev client must be restarted, prefer closing only the dev client window manually or identify the exact dev process first.
+- After code changes are done and validation passes, run the NeoForge dev client so the user can inspect the result in-game.
+- The user often keeps a separate Minecraft `1.16.5` instance open with the original Astral Sorcery mod as a reference. Do not close, kill, or restart that instance.
 - `runClient` is configured to mute the dev client by updating `run/options.txt` before launch.
 - Use `.\gradlew.bat --no-daemon build` as the baseline validation command.
 - The user uses VS Code and the Codex extension.
@@ -46,8 +48,24 @@ See `docs/dependency-strategy.md` for more detail.
   - `data/<namespace>/worldgen/structure/*.json`
   - `data/<namespace>/worldgen/structure_set/*.json`
   - biome tags such as `data/<namespace>/tags/worldgen/biome/has_structure/<name>.json`
+- Shrine structure JSONs can include `y_offset`. This mirrors the old template structure offsets; current values are ancient `-7`, desert `-11`, small `0`.
+- Shrine structure JSONs can also include flatness controls:
+  - `max_terrain_delta`: maximum allowed sampled height range across the template footprint. `-1` disables this check.
+  - `max_surrounding_terrain_delta`: maximum allowed sampled height range across the template footprint plus surrounding margin. `-1` disables this check.
+  - `max_surface_floor_delta`: maximum allowed sampled difference between the surface heightmap and ocean-floor heightmap. This is used to reject lake/ocean candidates while allowing thin snow layers.
+  - `surrounding_terrain_margin`: extra horizontal blocks sampled around the template footprint.
+  - `terrain_smoothing_margin`: outside-footprint margin that may be lightly blended after placement.
+  - `terrain_smoothing_fill_limit`: maximum number of blocks a smoothing column may fill.
+  - `terrain_smoothing_cut_limit`: maximum number of blocks a smoothing column may cut.
+  - `terrain_smoothing_y_offset`: vertical offset from the sampled surface anchor used by the smoothing pass. Ancient shrine currently uses `-1` so surrounding infill stops below the outer base layer.
+  - `terrain_support_fill_limit`: maximum number of blocks that may be filled below the structure footprint to prevent floating corners.
+  - `terrain_support_y_offset`: vertical offset from the sampled surface anchor used by the under-footprint support pass.
+  - `placement_attempts`: number of random positions to try in the candidate structure chunk.
+  - `terrain_sample_step`: horizontal sample spacing in blocks.
 - NeoForge biome modifiers are still used for feature worldgen such as ores, but shrines are now registered structures so `/locate structure ...` works.
 - Custom models that do not fill the full block need matching block registration behavior such as `noOcclusion()`. This fixed missing terrain/see-through rendering for discovery altar/well style blocks and marble pillars.
+- Marble and black marble pillars use a custom waterloggable pillar block. Their legacy `pillartype` state is `middle`, `bottom`, or `top`: stacked bottom and top pieces flare to full width for 4 pixels, while middle/lone pieces remain 12x12 columns.
+- The legacy marble and black marble shaped crafting and stonecutting recipe set has been ported under `data/astralsorcery/recipe/shaped/...` and `data/astralsorcery/recipe/stonecutting/...`. Keep future marble recipe edits aligned with `legacy-1.16.5`'s `VanillaTypedRecipeProvider`.
 - Rock crystal ore needed solid ore textures for block models; item icons can look correct even when placed block models are wrong.
 - Minecraft 1.21.1 has deepslate, so rock crystal ore now has a deepslate variant.
 
@@ -57,7 +75,7 @@ See `docs/dependency-strategy.md` for more detail.
   - `crystal`: place a worldgen rock collector crystal.
   - `shrine_chest`: 50 percent chest with shrine loot, otherwise air.
   - `brick_shrine_chest`: 50 percent chest with shrine loot, otherwise marble bricks.
-  - `random_top_block`: mostly biome top/filler behavior in legacy; currently simplified.
+  - `random_top_block`: old code used the biome surface top state. The port maps desert to sand, badlands variants to red sand, and currently falls back to grass for other biomes because modern surface rules do not expose the old surface-builder config directly.
 - Legacy worldgen shrine collector crystals used fixed properties equivalent to size 2, shape 2, purity 2, collection rate 2.
 - Old shrine crystals were protected study tools, not intended to be harvested casually.
 - Starmetal ore was not natural worldgen in old Astral Sorcery; it came from starlight/crystal transmutation mechanics.

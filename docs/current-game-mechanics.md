@@ -49,6 +49,18 @@ Shrines are registered structures, so vanilla locate works:
 
 Shrine templates are stored in `data/astralsorcery/structure`.
 
+Registered shrine placement now applies the legacy vertical offsets:
+
+- Ancient shrine: `-7`.
+- Desert shrine: `-11`.
+- Small shrine: `0`.
+
+Ancient shrines also perform bounded terrain checks before generating. The structure tries up to 32 random positions in the candidate chunk, samples the rotated shrine footprint every 2 blocks, and only generates when the sampled base terrain height range is 5 blocks or less. It also samples a 10-block margin around the footprint and rejects sites where that surrounding height range is greater than 14 blocks. Water/lake candidates are rejected by comparing surface height against ocean-floor height.
+
+Ancient shrines can lightly blend their outer edge into acceptable terrain. The current pass touches only the area within 5 blocks outside the shrine footprint, fills up to 4 blocks, and cuts up to 2 blocks. The smoothing target is one block below the shrine's surface anchor so the outer base layer sits on the ground instead of being buried by infill. Larger hills or mountain walls should be rejected instead of bulldozed.
+
+Ancient shrines also support-fill below their own footprint to prevent floating corners. This support pass only fills under columns that have an actual non-fluid shrine block above the terrain target, uses local terrain top/filler blocks, and is limited to 6 blocks of fill.
+
 ## Shrine Behavior
 
 Legacy NBT templates are used for the three early shrine types.
@@ -58,7 +70,7 @@ Structure block data markers are handled as follows:
 - `crystal`: places a rock collector crystal block entity.
 - `shrine_chest`: randomly places a shrine loot chest or air.
 - `brick_shrine_chest`: randomly places a shrine loot chest or marble bricks.
-- `random_top_block`: currently places grass block most of the time or air.
+- `random_top_block`: places biome-aware top cover most of the time or air. Desert uses sand, badlands variants use red sand, and other biomes currently fall back to grass.
 
 Shrine chests use `data/astralsorcery/loot_table/shrine_chest.json`.
 
@@ -113,15 +125,15 @@ This is enough for early block behavior and debug feedback, but it is not yet eq
 Known model fixes already applied:
 
 - Ore block textures were changed to solid versions so placed ore blocks are not transparent.
-- Discovery altar and lightwell use non-full-block handling.
-- Marble pillar and black marble pillar use `noOcclusion()` because their model is a 12x12 column inside a full block.
+- Discovery altar uses the legacy non-full luminous crafting table shape and is not waterloggable. Lightwell uses non-full-block handling.
+- Marble pillar and black marble pillar use non-full collision/selection shapes, are waterloggable, and use legacy-style stacked pillar states. A lone pillar or middle segment is a 12x12 column. A bottom segment gets a 4-pixel-tall full-width base flare, and a top segment gets a 4-pixel-tall full-width top flare.
 - Rock collector crystals use the translucent render layer so their glass-like shell can blend instead of drawing as a hard cutout.
 
 ## Recipes
 
 Basic vanilla-style recipes exist for early shell items such as:
 
-- Marble bricks.
+- Marble and black marble variants, matching the old shaped crafting and stonecutting recipe set.
 - Black marble raw.
 - Parchment.
 - Glass lens.

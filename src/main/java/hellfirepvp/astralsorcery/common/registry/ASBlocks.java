@@ -3,6 +3,7 @@ package hellfirepvp.astralsorcery.common.registry;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.block.CollectorCrystalBlock;
 import hellfirepvp.astralsorcery.common.block.DiscoveryAltarBlock;
+import hellfirepvp.astralsorcery.common.block.MarblePillarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -24,7 +25,7 @@ public final class ASBlocks {
     public static final DeferredBlock<Block> MARBLE_ARCH = stone("marble_arch");
     public static final DeferredBlock<Block> MARBLE_CHISELED = stone("marble_chiseled");
     public static final DeferredBlock<Block> MARBLE_ENGRAVED = stone("marble_engraved");
-    public static final DeferredBlock<Block> MARBLE_PILLAR = pillarStone("marble_pillar");
+    public static final DeferredBlock<MarblePillarBlock> MARBLE_PILLAR = pillarStone("marble_pillar");
     public static final DeferredBlock<Block> MARBLE_RUNED = stone("marble_runed");
     public static final DeferredBlock<SlabBlock> MARBLE_SLAB = slab("marble_slab");
     public static final DeferredBlock<StairBlock> MARBLE_STAIRS = stairs("marble_stairs", MARBLE_BRICKS);
@@ -34,7 +35,7 @@ public final class ASBlocks {
     public static final DeferredBlock<Block> BLACK_MARBLE_ARCH = darkStone("black_marble_arch");
     public static final DeferredBlock<Block> BLACK_MARBLE_CHISELED = darkStone("black_marble_chiseled");
     public static final DeferredBlock<Block> BLACK_MARBLE_ENGRAVED = darkStone("black_marble_engraved");
-    public static final DeferredBlock<Block> BLACK_MARBLE_PILLAR = darkPillarStone("black_marble_pillar");
+    public static final DeferredBlock<MarblePillarBlock> BLACK_MARBLE_PILLAR = darkPillarStone("black_marble_pillar");
     public static final DeferredBlock<Block> BLACK_MARBLE_RUNED = darkStone("black_marble_runed");
     public static final DeferredBlock<SlabBlock> BLACK_MARBLE_SLAB = darkSlab("black_marble_slab");
     public static final DeferredBlock<StairBlock> BLACK_MARBLE_STAIRS = stairs("black_marble_stairs", BLACK_MARBLE_BRICKS);
@@ -90,12 +91,12 @@ public final class ASBlocks {
         return BLOCKS.register(name, () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLACK)));
     }
 
-    private static DeferredBlock<Block> pillarStone(String name) {
-        return BLOCKS.register(name, () -> new Block(stoneProps().noOcclusion()));
+    private static DeferredBlock<MarblePillarBlock> pillarStone(String name) {
+        return BLOCKS.register(name, () -> new MarblePillarBlock(stoneProps().noOcclusion()));
     }
 
-    private static DeferredBlock<Block> darkPillarStone(String name) {
-        return BLOCKS.register(name, () -> new Block(stoneProps().mapColor(MapColor.COLOR_BLACK).noOcclusion()));
+    private static DeferredBlock<MarblePillarBlock> darkPillarStone(String name) {
+        return BLOCKS.register(name, () -> new MarblePillarBlock(stoneProps().mapColor(MapColor.COLOR_BLACK).noOcclusion()));
     }
 
     private static DeferredBlock<SlabBlock> slab(String name) {

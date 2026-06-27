@@ -4,5 +4,18 @@
   "spawn_overrides": {},
   "step": "surface_structures",
   "template": "astralsorcery:ancient_shrine",
-  "terrain_adaptation": "none"
+  "terrain_adaptation": "none",
+  "y_offset": -7,
+  "max_terrain_delta": 5,
+  "max_surrounding_terrain_delta": 14,
+  "max_surface_floor_delta": 1,
+  "surrounding_terrain_margin": 10,
+  "terrain_smoothing_margin": 5,
+  "terrain_smoothing_fill_limit": 4,
+  "terrain_smoothing_cut_limit": 2,
+  "terrain_smoothing_y_offset": -1,
+  "terrain_support_fill_limit": 6,
+  "terrain_support_y_offset": 0,
+  "placement_attempts": 32,
+  "terrain_sample_step": 2
 }

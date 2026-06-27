@@ -17,10 +17,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class DiscoveryAltarBlock extends BaseEntityBlock {
     public static final MapCodec<DiscoveryAltarBlock> CODEC = simpleCodec(DiscoveryAltarBlock::new);
+    private static final VoxelShape SHAPE = Shapes.or(
+            box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D),
+            box(4.0D, 2.0D, 4.0D, 12.0D, 9.5D, 12.0D),
+            box(0.0D, 9.5D, 0.0D, 16.0D, 15.5D, 16.0D));
 
     public DiscoveryAltarBlock(Properties properties) {
         super(properties);
@@ -34,6 +42,11 @@ public class DiscoveryAltarBlock extends BaseEntityBlock {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Nullable

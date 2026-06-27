@@ -5,11 +5,14 @@ import hellfirepvp.astralsorcery.common.registry.ASBlocks;
 import hellfirepvp.astralsorcery.common.tile.CollectorCrystalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
@@ -35,7 +38,7 @@ public final class AstralShrinePieces {
     private AstralShrinePieces() {
     }
 
-    public static void addPiece(StructureTemplateManager templateManager, StructurePieceAccessor pieces, ResourceLocation templateId, BlockPos center, Rotation rotation) {
+    public static void addPiece(StructureTemplateManager templateManager, StructurePieceAccessor pieces, ResourceLocation templateId, BlockPos center, Rotation rotation, int yOffset, int terrainSmoothingMargin, int terrainSmoothingFillLimit, int terrainSmoothingCutLimit, int terrainSmoothingYOffset, int terrainSupportFillLimit, int terrainSupportYOffset) {
         Optional<StructureTemplate> optionalTemplate = templateManager.get(templateId);
         if (optionalTemplate.isEmpty()) {
             return;
@@ -43,7 +46,7 @@ public final class AstralShrinePieces {
 
         StructureTemplate template = optionalTemplate.get();
         BlockPos placement = center.offset(-template.getSize().getX() / 2, 0, -template.getSize().getZ() / 2);
-        pieces.addPiece(new AstralShrinePiece(templateManager, templateId, placement, rotation));
+        pieces.addPiece(new AstralShrinePiece(templateManager, templateId, placement, rotation, yOffset, terrainSmoothingMargin, terrainSmoothingFillLimit, terrainSmoothingCutLimit, terrainSmoothingYOffset, terrainSupportFillLimit, terrainSupportYOffset));
     }
 
     static StructurePlaceSettings settings(Rotation rotation) {
@@ -73,7 +76,7 @@ public final class AstralShrinePieces {
             }
             case "random_top_block" -> {
                 if (random.nextFloat() < 0.7F) {
-                    level.setBlock(pos, Blocks.GRASS_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
+                    level.setBlock(pos, topBlockForBiome(level, pos), Block.UPDATE_ALL);
                 } else {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                 }
@@ -99,5 +102,16 @@ public final class AstralShrinePieces {
         if (blockEntity instanceof RandomizableContainerBlockEntity container) {
             container.setLootTable(SHRINE_CHEST_LOOT, random.nextLong());
         }
+    }
+
+    static BlockState topBlockForBiome(ServerLevelAccessor level, BlockPos pos) {
+        Holder<Biome> biome = level.getBiome(pos);
+        if (biome.is(Biomes.DESERT)) {
+            return Blocks.SAND.defaultBlockState();
+        }
+        if (biome.is(Biomes.BADLANDS) || biome.is(Biomes.ERODED_BADLANDS) || biome.is(Biomes.WOODED_BADLANDS)) {
+            return Blocks.RED_SAND.defaultBlockState();
+        }
+        return Blocks.GRASS_BLOCK.defaultBlockState();
     }
 }

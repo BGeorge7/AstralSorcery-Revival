@@ -1,7 +1,28 @@
 {
-  "variants": {
-    "": {
-      "model": "astralsorcery:block/black_marble_pillar"
+  "multipart": [
+    {
+      "when": {
+        "pillartype": "middle"
+      },
+      "apply": {
+        "model": "astralsorcery:block/black_marble_pillar"
+      }
+    },
+    {
+      "when": {
+        "pillartype": "top"
+      },
+      "apply": {
+        "model": "astralsorcery:block/black_marble_pillar_top"
+      }
+    },
+    {
+      "when": {
+        "pillartype": "bottom"
+      },
+      "apply": {
+        "model": "astralsorcery:block/black_marble_pillar_bottom"
+      }
     }
-  }
+  ]
 }

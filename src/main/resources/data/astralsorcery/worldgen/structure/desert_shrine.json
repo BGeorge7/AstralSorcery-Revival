@@ -4,5 +4,6 @@
   "spawn_overrides": {},
   "step": "surface_structures",
   "template": "astralsorcery:desert_shrine",
-  "terrain_adaptation": "none"
+  "terrain_adaptation": "none",
+  "y_offset": -11
 }
