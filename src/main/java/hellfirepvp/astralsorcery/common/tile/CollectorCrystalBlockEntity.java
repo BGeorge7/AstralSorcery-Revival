@@ -1,7 +1,6 @@
 package hellfirepvp.astralsorcery.common.tile;
 
 import hellfirepvp.astralsorcery.common.data.CrystalAttributeSet;
-import hellfirepvp.astralsorcery.common.effect.StarlightAmbientParticles;
 import hellfirepvp.astralsorcery.common.registry.ASBlockEntityTypes;
 import hellfirepvp.astralsorcery.common.registry.ASBlocks;
 import hellfirepvp.astralsorcery.common.registry.ASSounds;
@@ -49,6 +48,9 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
     @Nullable
     private BlockPos activeTransmutationTarget;
     private float activeTransmutationProgress;
+    @Nullable
+    private BlockPos lastTransmutationBurstTarget;
+    private long lastTransmutationBurstGameTime = Long.MIN_VALUE;
     private final Map<BlockPos, ActiveTransmutation> activeTransmutations = new HashMap<>();
 
     public CollectorCrystalBlockEntity(BlockPos pos, BlockState blockState) {
@@ -57,7 +59,6 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, CollectorCrystalBlockEntity crystal) {
         if (level.isClientSide()) {
-            crystal.tickClientParticles(level, pos);
             return;
         }
 
@@ -111,6 +112,15 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
         return activeTransmutationProgress;
     }
 
+    @Nullable
+    public BlockPos getLastTransmutationBurstTarget() {
+        return lastTransmutationBurstTarget;
+    }
+
+    public long getLastTransmutationBurstGameTime() {
+        return lastTransmutationBurstGameTime;
+    }
+
     public String getAttributeSummary() {
         return attributes.summary();
     }
@@ -126,15 +136,6 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
         long gameTime = level.getGameTime();
         activeTransmutations.entrySet().removeIf(entry -> gameTime - entry.getValue().lastReceivedGameTime > TRANSMUTATION_STALE_TICKS
                 || !level.getBlockState(entry.getKey()).is(Blocks.CRAFTING_TABLE));
-        if (collected <= 0.0F) {
-            updateTransmutationVisual(level, crystalPos, null, 0.0F);
-            return;
-        }
-        if (playerMade) {
-            updateTransmutationVisual(level, crystalPos, null, 0.0F);
-            return;
-        }
-
         BlockPos nearest = findNearestCraftingTable(level, crystalPos);
         if (nearest == null) {
             updateTransmutationVisual(level, crystalPos, null, 0.0F);
@@ -142,6 +143,11 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
         }
 
         ActiveTransmutation active = activeTransmutations.computeIfAbsent(nearest, ignored -> new ActiveTransmutation());
+        if (collected <= 0.0F) {
+            updateTransmutationVisual(level, crystalPos, nearest, active.progress / CRAFTING_TABLE_TRANSMUTATION_COST);
+            return;
+        }
+
         active.progress += collected;
         active.lastReceivedGameTime = gameTime;
         updateTransmutationVisual(level, crystalPos, nearest, active.progress / CRAFTING_TABLE_TRANSMUTATION_COST);
@@ -149,6 +155,8 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
             level.setBlockAndUpdate(nearest, ASBlocks.ALTAR_DISCOVERY.get().defaultBlockState());
             level.playSound(null, nearest, ASSounds.CRAFT_FINISH.get(), SoundSource.BLOCKS, 0.8F, 1.2F);
             activeTransmutations.remove(nearest);
+            lastTransmutationBurstTarget = nearest;
+            lastTransmutationBurstGameTime = gameTime;
             updateTransmutationVisual(level, crystalPos, null, 0.0F);
         }
     }
@@ -164,10 +172,6 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
         activeTransmutationProgress = clampedProgress;
         setChanged();
         level.sendBlockUpdated(crystalPos, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-    }
-
-    private void tickClientParticles(Level level, BlockPos pos) {
-        StarlightAmbientParticles.tick(level, pos, StarlightAmbientParticles.COLLECTOR_CRYSTAL);
     }
 
     private BlockPos findNearestCraftingTable(Level level, BlockPos crystalPos) {
@@ -196,8 +200,10 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
     }
 
     private boolean hasLineOfSightToTable(Level level, BlockPos crystalPos, BlockPos tablePos) {
-        Vec3 start = Vec3.atCenterOf(crystalPos).add(0.0D, 0.25D, 0.0D);
+        Vec3 crystalCenter = Vec3.atCenterOf(crystalPos).add(0.0D, 0.25D, 0.0D);
         Vec3 end = Vec3.atCenterOf(tablePos).add(0.0D, 0.35D, 0.0D);
+        Vec3 direction = end.subtract(crystalCenter);
+        Vec3 start = direction.lengthSqr() < 1.0E-4D ? crystalCenter : crystalCenter.add(direction.normalize().scale(0.55D));
         BlockHitResult result = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
         return result.getType() == HitResult.Type.MISS || result.getBlockPos().equals(tablePos);
     }
@@ -222,6 +228,13 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
             this.activeTransmutationTarget = null;
             this.activeTransmutationProgress = 0.0F;
         }
+        if (tag.contains("lastTransmutationBurstTarget")) {
+            this.lastTransmutationBurstTarget = BlockPos.of(tag.getLong("lastTransmutationBurstTarget"));
+            this.lastTransmutationBurstGameTime = tag.getLong("lastTransmutationBurstGameTime");
+        } else {
+            this.lastTransmutationBurstTarget = null;
+            this.lastTransmutationBurstGameTime = Long.MIN_VALUE;
+        }
     }
 
     @Override
@@ -242,6 +255,10 @@ public class CollectorCrystalBlockEntity extends BlockEntity {
         if (activeTransmutationTarget != null) {
             tag.putLong("activeTransmutationTarget", activeTransmutationTarget.asLong());
             tag.putFloat("activeTransmutationProgress", activeTransmutationProgress);
+        }
+        if (lastTransmutationBurstTarget != null) {
+            tag.putLong("lastTransmutationBurstTarget", lastTransmutationBurstTarget.asLong());
+            tag.putLong("lastTransmutationBurstGameTime", lastTransmutationBurstGameTime);
         }
     }
 

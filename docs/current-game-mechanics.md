@@ -85,11 +85,12 @@ Rock collector crystals currently:
 - Faint client-side particles using legacy Astral Sorcery particle sprites appear around collector crystals.
 - Brighter sky-exposure god rays render only while the collector crystal can see the sky and is producing starlight.
 - During crafting table transmutation, a single continuous lightbeam renders from the collector crystal toward the target crafting table.
+- When a crafting table finishes transforming, a brief burst of rock-crystal-tinted particles rises from the transformed block and fades out.
 
 Known limitations:
 
-- Beam visuals use the old `lightbeam.png` texture through a modern block entity renderer.
-- The god rays and table beam are first-pass approximations and still need tuning against legacy footage.
+- The table beam uses the old `lightbeam_transfer.png` texture through a modern block entity renderer.
+- The god rays, table beam, and transmutation particle burst are still visual approximations and may need more tuning against legacy footage.
 - No starlight network yet.
 - No lens/prism/linking behavior yet.
 - No true legacy crystal growth, purity, cutting, or enhancement behavior yet.

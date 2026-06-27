@@ -32,6 +32,13 @@ The port should be faithful to old Astral Sorcery from the player perspective, b
 
 See `docs/dependency-strategy.md` for more detail.
 
+## Legacy Gameplay Study References
+
+- `docs/legacy-playlist-study.md` records the YouTube playlist used as tutorial source material and how captions were extracted locally.
+- `docs/legacy-gameplay-mechanics-bible.md` summarizes legacy player-facing mechanics by progression phase.
+- `docs/starlight-visual-effects.md` documents the reusable god ray, directed beam, sparkle, and render type helpers. Use it before adding new Astral light effects.
+- These docs describe intended/legacy behavior. `docs/current-game-mechanics.md` remains the source of truth for what the NeoForge port currently implements.
+
 ## Important 1.21.1 Migration Findings
 
 - Structure template NBT files belong under `data/<namespace>/structure`, singular. The old `structures` folder caused template lookup failures.
@@ -66,7 +73,7 @@ See `docs/dependency-strategy.md` for more detail.
 - `AstralShrineFeature` still exists mostly for manual debug placement compatibility. Natural shrine generation should use registered structures, not feature biome modifiers.
 - `CollectorCrystalBlockEntity` stores legacy-shaped crystal attributes, a random major constellation label, player-made state, sky visibility, and last sampled ambient starlight.
 - Non-player-made collector crystals scan for nearby crafting tables and slowly transmute them into discovery altars when the crystal is producing starlight.
-- Collector crystal visuals now use a block entity renderer backed by the old `lightbeam.png` texture for sky god rays and table transmutation beams. Custom particle types exist but should not be the main beam representation.
+- Collector crystal visuals now use reusable block entity render helpers for sky god rays, ambient motes, table transmutation beams, beam sparkles, and target-side transmutation motes. The ambient/target motes use the legacy `particle_small.png`; its octagonal alpha silhouette is baked into the asset and accepted for now.
 - `StarlightService` currently provides basic ambient starlight from time of day, sky visibility, dimension, and position. It is not yet the full old starlight network.
 
 ## Useful Debug Commands
